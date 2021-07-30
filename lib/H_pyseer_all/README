@@ -1,0 +1,3 @@
+conda activate pyseer_env
+
+compare_wgs_paloc_and_tcdb_pyseer_results.R needs to be run AFTER all pyseer models are run. 

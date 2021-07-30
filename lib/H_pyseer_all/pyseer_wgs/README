@@ -1,0 +1,2 @@
+The command to submit all sbat files is: 
+for i in *sbat; do sbatch $i; done

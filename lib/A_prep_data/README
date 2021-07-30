@@ -1,0 +1,1 @@
+Numbered scripts are the Rscripts or sbatch files to be run. The non-numbered scripts are called by the numbered scripts.

@@ -1,0 +1,4 @@
+Before writing hogwash jobs and submitting make sure to update to the most up-to-date version of hogwash: 
+
+devtools::install_github("katiesaund/hogwash", force=TRUE)
+library(hogwash)

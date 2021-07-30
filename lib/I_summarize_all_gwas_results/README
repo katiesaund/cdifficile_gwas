@@ -1,0 +1,2 @@
+Run notebooks in ../../notebooks/*.Rmd
+07_ needs to be run interactively because of pivot_longer() function. 
