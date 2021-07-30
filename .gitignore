@@ -1,9 +1,15 @@
 notebook/*.html
 data/.*
+data/*
 data/*/.*
+data/*/*
 data/*/*/.*
+data/*/*/*
+data/*/*/*/*
 figures/.*
+figures/*
 figures/*/.*
+figures/*/*
 lib/*/*.sbat
 lib/*/*.out
 lib/*/*/*.sbat
