@@ -1,7 +1,10 @@
+notebook/*.html
 data/.*
 data/*/.*
 data/*/*/.*
 figures/.*
 figures/*/.*
-lib/*/.*sbat
-lib/*/.*out
+lib/*/*.sbat
+lib/*/*.out
+lib/*/*/*.sbat
+lib/*/*/*.out

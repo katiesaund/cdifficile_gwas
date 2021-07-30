@@ -1,0 +1,52 @@
+---
+title: "Summary of in vitro hogwash"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+This document describes the phylogenetic signal & types/number of variants used by hogwash for each in vitro phenotype in the Hanna GWAS project.
+Figures are all saved in /nfs/turbo/umms-esnitkin/Project_Cdiff/Analysis/Hanna_paper/cdifficile_in_vitro_GWAS/figures/.
+
+## Phylogenetic signal for each phenotype
+![](../figures/phylogenetic_signal_binary_phenotypes.jpg)
+![](../../figures/phylogenetic_signal_continuous_phenotypes.jpg)
+
+## Phenotype phylogentic signal vs number of high interest hits
+High interest variants == hits that have FDR corrected P-value < 0.05 & Epsilon > 0.15. 
+
+Binary phenotypes, individual loci
+![](../../figures/phylogenetic_signal_vs_num_hits_indiv_binary_phenotypes.jpg)
+Binary phenotypes, grouped loci
+![](../../figures/phylogenetic_signal_vs_num_hits_group_binary_phenotypes.jpg)
+
+Continuous phenotypes, individual loci
+![](../../figures/phylogenetic_signal_vs_num_hits_indiv_continuous_phenotypes.jpg)
+
+Continuous phenotypes, grouped loci
+![](../../figures/phylogenetic_signal_vs_num_hits_group_continuous_phenotypes.jpg)
+
+## Variants tested by hogwash
+This plot breakdowns the variants fed to hogwash (left), successfully tested by hogwash (meaning, assigned a P-value; middle), and those that are of high interest (right). 
+
+Individual Loci: 
+
+PhyC 
+![](../../figures/variant_funnel_through_hogwash_indiv_phyc.jpg)
+
+Synchronous 
+![](../../figures/variant_funnel_through_hogwash_indiv_synchronous.jpg)
+
+Continuous 
+![](../../figures/variant_funnel_through_hogwash_indiv_continuous.jpg)
+Grouped loci: 
+
+PhyC
+![](../../figures/variant_funnel_through_hogwash_group_phyc.jpg)
+Synchronous
+![](../../figures/variant_funnel_through_hogwash_group_synchronous.jpg)
+Continuous
+![](../../figures/variant_funnel_through_hogwash_group_continuous.jpg)
+

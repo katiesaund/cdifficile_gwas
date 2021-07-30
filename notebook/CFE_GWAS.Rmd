@@ -1,0 +1,53 @@
+---
+title: "CFE GWAS"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Individual Loci Results
+
+Phylogenetic tree with high interest genotype heatmap and a barplot of the phenotype. 
+-- Doesn't get created for CFE because no hits of interest in the heatmap. 
+```{r, include = FALSE}
+# Image didn't get created
+# ![](../../figures/log_cfe_continuous_indiv_results_tree_w_ribo_sig_pval_hi_epsilon_hits_heatmap_and_pheno_barplot.png)
+```
+
+
+
+A Manhattan Plot of all tested variants. 
+![](../figures/gwas_results/log_cfe_indiv_manhattan.png)
+
+P-value vs. Epsilon 
+![](../figures/gwas_results/log_cfe_indiv_pval_vs_convergence.png)
+
+Variants that were fed to hogwash (left), successfully tested (center), and then considered high interest (right).
+![](../figures/gwas_results/log_cfe_variant_funnel_through_hogwash_indiv.jpg)
+
+The same plot as above, but now divided by type of genomic variant (SNP, Indel, or accessory gene).
+![](../figures/gwas_results/log_cfe_variant_funnel_through_hogwash_indiv_by_type.jpg)
+
+# Grouped Loci Results
+
+Phylogenetic tree with high interest genotype heatmap and a barplot of the phenotype. 
+-- Doesn't get created for CFE because no hits of interest in the heatmap.
+```{r, include = FALSE}
+# Image didn't get created
+# ![](../../figures/log_cfe_continuous_group_results_tree_w_ribo_sig_pval_hi_epsilon_hits_heatmap_and_pheno_barplot.png)
+```
+
+A Manhattan Plot of all tested variants. 
+![](../figures/gwas_results/log_cfe_group_manhattan.png)
+
+P-value vs. Epsilon 
+![](../figures/gwas_results/log_cfe_group_pval_vs_convergence.png)
+
+Variants that were fed to hogwash (left), successfully tested (center), and then considered high interest (right).
+![](../figures/gwas_results/log_cfe_variant_funnel_through_hogwash_group.jpg)
+
+The same plot as above, but now divided by type of genomic variant (SNP, Indel, or accessory gene).
+![](../figures/gwas_results/log_cfe_variant_funnel_through_hogwash_group_by_type.jpg)
+
