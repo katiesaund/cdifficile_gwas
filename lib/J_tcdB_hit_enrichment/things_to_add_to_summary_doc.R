@@ -11,7 +11,7 @@ sum(grepl("tcdR", row.names(hogwash_continuous$hit_pvals)[hogwash_continuous$hit
 sum(grepl("tcdA", row.names(hogwash_continuous$hit_pvals)[hogwash_continuous$hit_pvals$fdr_corrected_pvals > -log(0.15)]))
 
 
-load("../../data")
+# load("../../data")
 
 sum(grepl("[|]tcdR-tcdB[|]", row.names(hogwash_continuous$hit_pvals)[hogwash_continuous$hit_pvals$fdr_corrected_pvals > -log(0.15)])) #2
 

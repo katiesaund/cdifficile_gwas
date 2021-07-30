@@ -276,6 +276,10 @@ all_promoter_df <- mapping_df %>%
   filter(`Tested SNPs` == 1 & Promoter !=  "Not promoter")
 write_csv(all_promoter_df, path = "../../data/13_summaries/all_promoter_summary_for_individual_test.csv", col_names = TRUE)
 
+#117 deletion in TcdC
+tcdC_pvals <- hogwash_continuous$hit_pvals[grepl("tcdC", row.names(hogwash_continuous$hit_pvals)),, drop = FALSE]
+tcdC_pvals <- tcdC_pvals[grepl("117delA", row.names(tcdC_pvals)),, drop = FALSE]
+tcdC_pvals <- tcdC_pvals$fdr_corrected_pvals
 
 # Make a summary
 pval_ep <- cbind(hogwash_continuous$hit_pvals$fdr_corrected_pvals, hogwash_continuous$convergence$epsilon)
@@ -285,7 +289,7 @@ paloc_pval_ep <- cbind(pval_ep, row.names(hogwash_continuous$hit_pvals))
 colnames(paloc_pval_ep)[3] <- "locus"
 paloc_pval_ep <- paloc_pval_ep %>% filter(locus %in% colnames(paloc_genotype))
 
-paloc_summary <- matrix(NA, nrow = 12, ncol = 2)
+paloc_summary <- matrix(NA, nrow = 14, ncol = 2)
 paloc_summary[, 1] <- c("Number of SNPs assigned p-value in paloc", 
                         "Number of Indels assigned p-value in paloc", 
                         "Total number of indiv loci assigned p-value in paloc", 
@@ -297,7 +301,9 @@ paloc_summary[, 1] <- c("Number of SNPs assigned p-value in paloc",
                         "Number of indiv loci in tcdR-tcdB intergenic region", 
                         "Number of indiv loci in tcdR-tcdB above p-value threshold & in promoter", 
                         "Number of indiv loci in cdu1-tcdR intergenic region", 
-                        "Number of indiv loci in tcdR (not sigD) promoters")
+                        "Number of indiv loci in tcdR (not sigD) promoters", 
+                        "Number of indiv loci in tcdR-tcdB above p-value threshold", 
+                        "P-value of adenosine deletion at 117 in tcdC")
 paloc_summary[1, 2] <- length(tested_snps) # unique SNPs, there are a coupel SNPs at the same loci
 paloc_summary[2, 2] <- length(tested_indels)
 paloc_summary[3, 2] <- sum(length(tested_snps), length(tested_indels))
@@ -310,6 +316,9 @@ paloc_summary[9, 2] <- length(intersect(tested_snps, tcdR_stop:tcdB_start))
 paloc_summary[10, 2] <- length(intersect(significant_snp - cdu1_start, c(tcdB_promoter2_start:tcdB_promoter2_stop, tcdB_promoter1_start:tcdB_promoter1_stop)))
 paloc_summary[11, 2] <- length(intersect(tested_snps, cdu1_stop:tcdR_start))
 paloc_summary[12, 2] <- length(intersect(tested_snps - cdu1_start, c(tcdR_promoter2_start:tcdR_promoter2_stop, tcdR_promoter1_start:tcdR_promoter1_stop)))
+paloc_summary[13, 2] <-  length(intersect(significant_snp, c(tcdR_stop:tcdB_start)))
+paloc_summary[14, 2] <- round(tcdC_pvals, 3)
+
 write.csv(paloc_summary, "../../data/13_summaries/paloc_indiv_summary.csv", row.names = FALSE, quote = FALSE)
 
                          
