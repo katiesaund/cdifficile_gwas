@@ -174,7 +174,8 @@ sig_overlapping_mat
 # Let's say for toxin + severity:
 # We're asking: what are the chances that all 8 of the sig. toxin loci are also significant in
 # the severity gwas? 
-num_perm <- 1000
+num_perm <- 10000
+
 num_sev_all <- 9115
 num_sev_sig <- 1052
 num_tox_all <- 18362
