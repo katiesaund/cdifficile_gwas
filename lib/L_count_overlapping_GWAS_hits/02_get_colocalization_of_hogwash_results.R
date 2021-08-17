@@ -157,3 +157,69 @@ pheatmap::pheatmap(intersect_mat,
                    cluster_rows = FALSE,
                    angle_col = 45,
                    cluster_cols = FALSE)
+
+
+# Add row and column annotations with numbers of significant hits for each phenotype
+num_sig_hits_df <- as.data.frame(matrix(c(rep(0, 8), phenotypes$longhand), ncol = 2), stringsAsFactors = FALSE)
+colnames(num_sig_hits_df) <- c("Loci", "Phenotype")
+num_sig_hits_df$Loci[num_sig_hits_df$Phenotype == "Severity"] <- nrow(severity_df)
+num_sig_hits_df$Loci[num_sig_hits_df$Phenotype == "ln(spore viability)"] <- nrow(cfe_df)
+num_sig_hits_df$Loci[num_sig_hits_df$Phenotype == "ln(germination in Tc and Gly)"] <- nrow(germ_tc_and_gly_df)
+num_sig_hits_df$Loci[num_sig_hits_df$Phenotype == "ln(germination in Tc)"] <- nrow(germ_tc_df)
+num_sig_hits_df$Loci[num_sig_hits_df$Phenotype == "ln(growth rate)"] <- nrow(growth_df)
+num_sig_hits_df$Loci[num_sig_hits_df$Phenotype == "ln(# spores)"] <- nrow(sporulation_df)
+num_sig_hits_df$Loci[num_sig_hits_df$Phenotype == "ln(toxin activity)"] <- nrow(toxin_df)
+row.names(num_sig_hits_df) <- num_sig_hits_df$Phenotype
+num_sig_hits_df <- num_sig_hits_df[, 1, drop = FALSE]
+num_sig_hits_df$Loci <- as.numeric(num_sig_hits_df$Loci)
+
+pheatmap::pheatmap(intersect_mat,
+                   annotation_col = num_sig_hits_df,
+                   annotation_row = num_sig_hits_df,
+                   filename = "../../figures/overlapping/DRAFT_hogwash_colocalization_heatmap_raw_values_and_annotations_with_num_loci_included.jpg",
+                   width = 8,
+                   height = 3, 
+                   color = colorRampPalette(c("white", "red"))(100), 
+                   display_numbers = FALSE,
+                   na_col = "grey",
+                   cluster_rows = FALSE,
+                   angle_col = 45,
+                   cluster_cols = FALSE)
+
+write.table(num_sig_hits_df, file = "../../data/13_summaries/number_significant_and_convergent_loci_indiv_gwas_for_overlap_plots.tsv", sep = "\t")
+
+
+pheatmap::pheatmap(intersect_mat,
+                   annotation_col = num_sig_hits_df,
+                   annotation_row = num_sig_hits_df,
+                   filename = "../../figures/overlapping/DRAFT_hogwash_colocalization_heatmap_raw_values_and_annotations_with_num_loci_included.jpg",
+                   width = 8,
+                   height = 3, 
+                   color = colorRampPalette(c("white", "red"))(100), 
+                   display_numbers = FALSE,
+                   na_col = "grey",
+                   cluster_rows = FALSE,
+                   angle_col = 45,
+                   cluster_cols = FALSE)
+# remove zero phenotypes
+
+bad_phenotypes <- c("ln(germination in Tc and Gly)", "ln(spore viability)")
+foo <- intersect_mat[!(row.names(intersect_mat) %in% bad_phenotypes), 
+                     !(colnames(intersect_mat) %in% bad_phenotypes)]
+
+pheatmap::pheatmap(foo,
+                   annotation_col = num_sig_hits_df,
+                   annotation_row = num_sig_hits_df,
+                   filename = "../../figures/overlapping/DRAFT_hogwash_colocalization_heatmap_raw_values_and_annotations_with_num_loci_included_zero_phenotypes_removed.jpg",
+                   width = 8,
+                   height = 3, 
+                   color = colorRampPalette(c("white", "red"))(100), 
+                   display_numbers = FALSE,
+                   na_col = "grey",
+                   cluster_rows = FALSE,
+                   angle_col = 45,
+                   cluster_cols = FALSE)
+
+# Permutation analysis in 06_permutation_of_overlap_counts.R
+
+

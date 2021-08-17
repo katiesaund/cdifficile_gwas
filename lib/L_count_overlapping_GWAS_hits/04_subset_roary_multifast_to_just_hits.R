@@ -13,10 +13,8 @@ toxin_roary_names <- read.csv(paste0(data_dir, "toxin_severity_sig_overlap_roary
 indices <- rep(NA, nrow(toxin_roary_names))
 
 for (i in 1:nrow(toxin_roary_names)) {
-  indices[i] <- which(grepl(toxin_roary_names[1, i], names(roary_fasta)))
+  indices[i] <- which(grepl(paste0(toxin_roary_names[i, 1], "$"), names(roary_fasta)))
 }
-indices 
-# LEFT OFF HERE. ITS NOT WORKING YET.
 toxin_fasta <- roary_fasta[indices]
 
 write.FASTA(toxin_fasta, file = paste0(data_dir, "toxin_severity_sig_overlap_indiv_hits.fna"))
