@@ -25,8 +25,7 @@ phenotypes <- read_tsv("../../data/4_phenotypes/pheno_names.tsv")
 # Data and original plot from summarize_all_phenotype_data/get_colocalization_of_howgwash_results.R
 intersect_mat <- read.csv("../../data/13_summaries/number_overlapping_gwas_hits.csv", row.names = 1)
 intersect_mat <- as.matrix(intersect_mat)
-# drop fqR
-intersect_mat <- intersect_mat[2:8, 2:8]
+
 
 # make the pretty names
 for (i in 1:nrow(intersect_mat)) {
@@ -39,6 +38,14 @@ for (i in 1:nrow(intersect_mat)) {
     }
   }
 }
+
+# Remove fqr because not relevant to paper, remove other two because they don't have any significant hits at all
+bad_phenotypes <- c("ln(germination in Tc and Gly)", "ln(spore viability)", "fqR")
+intersect_mat <- intersect_mat[!(row.names(intersect_mat) %in% bad_phenotypes), 
+                     !(colnames(intersect_mat) %in% bad_phenotypes)]
+
+
+
 colnames(intersect_mat) <- gsub("ln[(]", "", colnames(intersect_mat)) %>% gsub("[)]", "", .) %>% gsub(" and ", "&", .) %>% gsub("Severity", "severe infection", .)
 row.names(intersect_mat) <- gsub("ln[(]", "", row.names(intersect_mat)) %>% gsub("[)]", "", .) %>% gsub(" and ", "&", .) %>% gsub("Severity", "severe infection", .)
 
@@ -48,8 +55,7 @@ intersect_mat[2, 2] <- NA
 intersect_mat[3, 3] <- NA
 intersect_mat[4, 4] <- NA
 intersect_mat[5, 5] <- NA
-intersect_mat[6, 6] <- NA
-intersect_mat[7, 7] <- NA
+
 
 # reorder martix to match other plots
 # Want to change plot order to: 
@@ -59,18 +65,41 @@ intersect_mat[7, 7] <- NA
 # 4. # sportes
 # 5. spore viability
 # 6. toxin 
-name_order <- c("germination in Tc", "germination in Tc&Gly", 
+name_order <- c("germination in Tc", #"germination in Tc&Gly", 
                 "growth rate", "# spores", 
-                "spore viability", "toxin activity", 
-                "severe infection")
+               # "spore viability", 
+                "toxin activity", "severe infection")
 intersect_mat <- intersect_mat[match(name_order, row.names(intersect_mat)),, drop = FALSE]
 intersect_mat <- intersect_mat[, match(name_order, colnames(intersect_mat)), drop = FALSE]
 
 # Remove redundant half
 intersect_mat[lower.tri(intersect_mat)] <- NA
 
+# Add asterisks for significantly enriched values
+perm_pval_mat <- read.csv(row.names = 1, file = "../../data/13_summaries/overlapping_permutation_bonf_corrected_p_values.csv")
+perm_pval_mat <- perm_pval_mat[c(1, 3, 4), 1:2] # keep just rows with significant results
+
 # plot
 melted_intersect_mat <- reshape2::melt(intersect_mat, na.rm = TRUE)
+melted_intersect_mat <- cbind(melted_intersect_mat, rep(NA, nrow(melted_intersect_mat)))
+colnames(melted_intersect_mat)[4] <- "Significant"
+
+melted_intersect_mat$Significant[
+  melted_intersect_mat$Var1 == "germination in Tc" &
+    melted_intersect_mat$Var2 == "severe infection"] <- "*"
+
+melted_intersect_mat$Significant[
+  melted_intersect_mat$Var1 == "# spores" &
+    melted_intersect_mat$Var2 == "severe infection"] <- "*"
+
+melted_intersect_mat$Significant[
+  melted_intersect_mat$Var1 == "toxin activity" &
+    melted_intersect_mat$Var2 == "severe infection"] <- "*"
+
+melted_intersect_mat$Significant[
+  melted_intersect_mat$Var1 == "germination in Tc" &
+    melted_intersect_mat$Var2 == "toxin activity"] <- "*"
+
 htmp_plot <-
   ggplot(data = melted_intersect_mat, aes(Var2, Var1, fill = value)) +
   geom_tile(color = "black") +
@@ -84,7 +113,8 @@ htmp_plot <-
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
   coord_fixed() +
   labs(tag = "A") +
-  theme(plot.tag = element_text(face = "bold"))
+  theme(plot.tag = element_text(face = "bold")) + 
+  geom_text(aes(label = Significant), size = 30, nudge_y = -0.25)
 
 # B ----
 # Prep data ----

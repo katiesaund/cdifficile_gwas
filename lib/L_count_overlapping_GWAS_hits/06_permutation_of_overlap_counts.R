@@ -168,13 +168,13 @@ num_loci_df <- num_loci_df[4:8, ]
 intersect_mat <- intersect_mat[row.names(intersect_mat) %in% row.names(num_loci_df),
                                colnames(intersect_mat) %in% row.names( num_loci_df)]
 intersect_mat
-sig_overlapping_mat <- read.csv(file = "../../data/13_summaries/number_overlapping_gwas_hits.csv")
-sig_overlapping_mat
+sig_overlapping_mat <- read.csv(file = "../../data/13_summaries/number_overlapping_gwas_hits.csv", row.names = 1)
+
 # What is this permutation test? 
 # Let's say for toxin + severity:
 # We're asking: what are the chances that all 8 of the sig. toxin loci are also significant in
 # the severity gwas? 
-num_perm <- 10000
+num_perm <- 1000
 
 num_sev_all <- 9115
 num_sev_sig <- 1052
@@ -189,16 +189,17 @@ num_sig_overlap_sev_tox <- 7
 
 # Let's simplify and say that 9114/9115 == 1
 
-perc_sev_sig <- num_sev_sig / num_overlap_sev_tox
-
 null_sev_tox_sig_overlap_vec <- rep(NA, num_perm)
 set.seed(1)
-for (i in 1:num_perm){
-  null_sig_tox_index <- sample(1:num_tox_all, size = num_tox_sig, replace = FALSE)
-  null_tox_overlap_sev_index <- sample(1:num_tox_all, size = num_overlap_sev_tox, replace = FALSE)
-  num_null_sig_overlap_sev_tox <- length(intersect(null_sig_tox_index, null_tox_overlap_sev_index))
-  null_sev_tox_sig_overlap_vec[i] <- num_null_sig_overlap_sev_tox
+for (i in 1:num_perm) {
+  null_sig_sev_index <- sample(1:num_sev_all, size = num_sev_sig, replace = FALSE)
+  null_sig_tox_index <- sample((num_sev_all - num_overlap_sev_tox + 1):num_tox_all, size = num_tox_sig, replace = FALSE)
+  num_null_sig_overlap <- length(intersect(null_sig_sev_index, null_sig_tox_index))
+  null_sev_tox_sig_overlap_vec[i] <- num_null_sig_overlap
 }
+
+hist(null_sig_tox_index, breaks = 100, col = rgb(1, 0, 0, 0.5), xlim = c(0, 20000), ylim = c(0, 200))
+hist(null_sig_sev_index, breaks = 10, col = rgb(0, 1, 0, 0.5), add = TRUE)
 
 hist(null_sev_tox_sig_overlap_vec)
 abline(v = num_sig_overlap_sev_tox, col = "red")
@@ -206,5 +207,92 @@ abline(v = num_sig_overlap_sev_tox, col = "red")
 tox_sev_pval <-
   (1 + sum(null_sev_tox_sig_overlap_vec >= num_sig_overlap_sev_tox)) / (1 + num_perm)
 
-
 # Alright, now how do I implement this for all pairwise interactions? 
+
+perm_pval_mat <- matrix(data = NA, nrow = nrow(intersect_mat), ncol = nrow(intersect_mat))
+colnames(perm_pval_mat) <- colnames(intersect_mat)
+row.names(perm_pval_mat) <- row.names(intersect_mat)
+
+for (i in 1:nrow(sig_overlapping_mat)) {
+  for (j in 1:nrow(phenotypes)) {
+    if (row.names(sig_overlapping_mat)[i] == phenotypes$shorthand[j]) {
+      row.names(sig_overlapping_mat)[i] <- phenotypes$longhand[j]
+    }
+  }
+}
+
+for (i in 1:ncol(sig_overlapping_mat)) {
+  for (j in 1:nrow(phenotypes)) {
+    if (colnames(sig_overlapping_mat)[i] == phenotypes$shorthand[j]) {
+      colnames(sig_overlapping_mat)[i] <- phenotypes$longhand[j]
+    }
+  }
+}
+
+set.seed(1)
+for (r in 1:nrow(perm_pval_mat)) {
+  for (c in 1:ncol(perm_pval_mat)) {
+    print("start")
+    print(row.names(perm_pval_mat)[r])
+    print(colnames(perm_pval_mat)[c])
+    
+    if (row.names(perm_pval_mat)[r] != colnames(perm_pval_mat)[c]) {
+      num_r_all <- num_loci_df$Tested_Loci[row.names(num_loci_df) == row.names(perm_pval_mat)[r]]
+      num_r_sig <- num_loci_df$Sig_Loci[row.names(num_loci_df) == row.names(perm_pval_mat)[r]]
+      
+      num_c_all <- num_loci_df$Tested_Loci[row.names(num_loci_df) == colnames(perm_pval_mat)[c]]
+      num_c_sig <- num_loci_df$Sig_Loci[row.names(num_loci_df) == colnames(perm_pval_mat)[c]]
+      
+      num_overlap_r_c <- intersect_mat[r, c]
+      
+      num_sig_overlap_r_c <- sig_overlapping_mat[row.names(sig_overlapping_mat) == row.names(perm_pval_mat)[r], 
+                                                 colnames(sig_overlapping_mat) == colnames(perm_pval_mat)[c]]
+      
+      null_r_c_sig_overlap_vec <- rep(NA, num_perm)
+      for (i in 1:num_perm) {
+        
+        if (num_r_all < num_c_all) {
+          null_sig_r_index <- sample(1:num_r_all, size = num_r_sig, replace = FALSE)
+          null_sig_c_index <- sample((num_r_all - num_overlap_r_c + 1):num_c_all, size = num_c_sig, replace = FALSE)
+        } else {
+          null_sig_c_index <- sample(1:num_c_all, size = num_c_sig, replace = FALSE)
+          null_sig_r_index <- sample((num_c_all - num_overlap_r_c + 1):num_r_all, size = num_r_sig, replace = FALSE)
+        }
+        
+        num_null_sig_overlap <- length(intersect(null_sig_r_index, null_sig_c_index))
+        null_r_c_sig_overlap_vec[i] <- num_null_sig_overlap
+      }
+      
+      hist(null_r_c_sig_overlap_vec, xlim = c(0, max(c(null_r_c_sig_overlap_vec, num_sig_overlap_r_c))))
+      abline(v = num_sig_overlap_r_c, col = "red")
+      
+      r_c_pval <-
+        (1 + sum(null_r_c_sig_overlap_vec >= num_sig_overlap_r_c)) / (1 + num_perm)
+      
+      perm_pval_mat[r, c] <- r_c_pval
+      
+    }
+  }
+}
+
+perm_pval_mat
+
+# Next, get the non-duplicated matrix
+# do bonferroni multiple test correction. 
+
+perm_pval_mat[5, ] <- c(NA, NA, NA, NA, NA)
+perm_pval_mat[4, 3:5] <- c(NA, NA, NA)
+perm_pval_mat[3, 4:5] <- c(NA, NA)
+perm_pval_mat[2, 5] <- NA
+
+
+round(p.adjust(perm_pval_mat[!is.na(perm_pval_mat)], method = "bonf"), 7)
+# Because there are 10 p-values, the bonf correct pvals are just these all x10
+
+perm_pval_mat <- 10 * perm_pval_mat
+perm_pval_mat[perm_pval_mat == 10] <- 1
+perm_pval_mat <- round(perm_pval_mat, 5)
+
+write.csv(perm_pval_mat, file = "../../data/13_summaries/overlapping_permutation_bonf_corrected_p_values.csv")
+
+
