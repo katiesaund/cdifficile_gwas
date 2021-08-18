@@ -114,7 +114,7 @@ htmp_plot <-
   coord_fixed() +
   labs(tag = "A") +
   theme(plot.tag = element_text(face = "bold")) + 
-  geom_text(aes(label = Significant), size = 30, nudge_y = -0.25)
+  geom_text(aes(label = Significant), size = 5)#, nudge_y = -0.25)
 
 # B ----
 # Prep data ----
