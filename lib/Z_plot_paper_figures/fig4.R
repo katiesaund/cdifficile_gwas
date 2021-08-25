@@ -6,6 +6,7 @@
 library(aplot)
 library(patchwork)
 library(ggplotify)
+library(ggplot2)
 
 #indiv_plot
 # Made in I_summarize_all_gwas_results/02_plot_manhattan_and_pval_vs_epsilon
@@ -70,14 +71,14 @@ new_gg_pheatmap_plot <- gg_pheatmap_plot +
 layout <- c(
   area(1, 1), 
   area(1, 2, 1, 3), 
-  area(1, 4), 
-  area(2, 1, 2, 4)
+  #area(1, 4), 
+  area(2, 1, 2, 3)
 )
 
 # Check out layout design
 # plot(layout)
 
-new_indiv_plot + new_tree_htmp_pheno_plot + new_group_plot + new_gg_pheatmap_plot + plot_layout(design = layout)
+new_indiv_plot + new_tree_htmp_pheno_plot + new_gg_pheatmap_plot + plot_layout(design = layout)
 
 ggsave(filename = "../../figures/Fig4.png",
        units = "in",
