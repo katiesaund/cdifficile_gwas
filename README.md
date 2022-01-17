@@ -1,7 +1,7 @@
 # C. difficile GWAS paper
 
 ### Manuscript
-[Strain variation in Clostridioides difficile toxin activity associated with genomic variation at both PaLoc and non-PaLoc loci](https://www.biorxiv.org/content/10.1101/2021.12.08.471880v1)
+[Strain variation in Clostridioides difficile toxin activity associated with genomic variation at both PaLoc and non-PaLoc loci](https://www.biorxiv.org/content/10.1101/2021.12.08.471880v2)
 
 ### Mansucript Authors
 [Katie Saund](https://orcid.org/0000-0002-6214-6713), Ali Pirani, Borden Lacy, Phil Hanna, and Evan Snitkin
