@@ -2,6 +2,11 @@ library(aplot)
 library(patchwork)
 library(ggplotify)
 
+y_width <- 15
+y_fontsize <- 9
+y_num_size <- 6
+y_angle <- 0 
+y_title_angle <- 0
 
 # ../H_pyseer_all/compare_wgs_paloc_and_tcdb_pyseer_results.R
 # pyseer_plot
@@ -39,12 +44,17 @@ toxin$toxin <- as.numeric(as.character(toxin$toxin))
 toxin_plot_B <- 
   ggplot(toxin, aes(ID, toxin)) + 
   geom_col() + 
-  ggtitle("Toxin activity") + 
+  ggtitle("Cytotoxicity") + 
   theme_classic() +
   theme(axis.title.x = element_blank(),
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(), 
-        axis.title.y = element_blank()) +
+        axis.text.y = element_text(angle = y_angle, size = y_num_size), 
+        axis.title.y = element_text(size = y_fontsize, angle = y_title_angle)) + 
+  ylab(lapply(strwrap("Equivalent Toxin B Activity ln(ng/ml)",
+                      width = y_width, 
+                      simplify = FALSE),
+              paste, collapse = "\n")) + 
   labs(tag = "B") +
   theme(plot.tag = element_text(face = "bold"))
   
@@ -113,7 +123,7 @@ new_pyseer_plot + as.ggplot(wg_tree_w_tox_plot) +
   as.ggplot(gene_tree_w_tox_plot) + plot_layout(design = layout) + 
   plot_layout(guides = 'keep')
 
-ggsave("../../figures/Fig6.png", width = 12, height = 5, units = "in")
-ggsave("../../figures/Fig6.pdf", width = 12, height = 5, units = "in")
+ggsave("../../figures/Fig5.png", width = 12, height = 5, units = "in")
+ggsave("../../figures/Fig5.pdf", width = 12, height = 5, units = "in")
 
 
