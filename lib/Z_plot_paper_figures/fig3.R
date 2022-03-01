@@ -100,8 +100,42 @@ melted_intersect_mat$Significant[
   melted_intersect_mat$Var1 == "germination in Tc" &
     melted_intersect_mat$Var2 == "toxin activity"] <- "*"
 
+melted_intersect_mat <- 
+  melted_intersect_mat %>% 
+  mutate(Var1 = case_when(Var1 == "germination in Tc" ~ "Germ. in TCA", 
+                          Var1 == "germination in Tc&Gly" ~ "Germ. in TCA&Gly", 
+                          Var1 == "fqR" ~ "Fluoroquinolone Resistance", 
+                          Var1 == "spore viability" ~ "Spore viability", 
+                          Var1 == "growth rate" ~ "Max growth rate", 
+                          Var1 == "# spores" ~ "Total spores",
+                          Var1 == "toxin activity" ~ "Cytotoxicity", 
+                          Var1 == "severe infection" ~ "Severe infection")) %>% 
+  
+  mutate(Var2 = case_when(Var2 == "germination in Tc" ~ "Germ. in TCA", 
+                          Var2 == "germination in Tc&Gly" ~ "Germ. in TCA&Gly", 
+                          Var2 == "fqR" ~ "Fluoroquinolone Resistance", 
+                          Var2 == "spore viability" ~ "Spore viability", 
+                          Var2 == "growth rate" ~ "Max growth rate", 
+                          Var2 == "# spores" ~ "Total spores",
+                          Var2 == "toxin activity" ~ "Cytotoxicity", 
+                          Var2 == "severe infection" ~ "Severe infection")) %>% 
+  mutate(plot_order_x = 5, 
+         plot_order_y = 5) %>% 
+  mutate(plot_order_x = case_when(
+                          Var2 ==  "Max growth rate" ~ 1, 
+                          Var2 == "Total spores" ~ 2,
+                          Var2 == "Cytotoxicity" ~ 3, 
+                          Var2 == "Severe infection" ~ 4)) %>% 
+  mutate(plot_order_y = case_when(
+    Var1 == "Total spores" ~ 2,
+    Var1 == "Cytotoxicity" ~ 3, 
+    Var1 == "Germ. in TCA" ~ 1))
+
 htmp_plot <-
-  ggplot(data = melted_intersect_mat, aes(Var2, Var1, fill = value)) +
+  ggplot(data = melted_intersect_mat,
+         aes(x = fct_reorder(Var2, plot_order_x), 
+             y = fct_reorder(Var1, plot_order_y),
+             fill = value)) +
   geom_tile(color = "black") +
   scale_fill_gradient2(
     high = "red", mid = "grey",
@@ -117,6 +151,13 @@ htmp_plot <-
   geom_text(aes(label = Significant), size = 5)#, nudge_y = -0.25)
 
 # B ----
+
+y_width <- 15
+y_fontsize <- 9
+y_num_size <- 6
+y_angle <- 0 
+y_title_angle <- 0
+
 # Prep data ----
 tree <- read.tree("../../data/3_trees/log_toxin.tree")
 ribotype <- read.table("../../data/6_ribotype/log_toxin_ribotype.tsv", 
@@ -170,10 +211,87 @@ sev_plot <-
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
     axis.text.y = element_blank(),
-    axis.title.y = element_blank()
+    axis.title.y = element_text(size = y_fontsize, angle = y_title_angle)
   ) +
   labs(tag = "B") +
-  theme(plot.tag = element_text(face = "bold"))
+  theme(plot.tag = element_text(face = "bold")) + 
+  ylab("Severe infection") + 
+  geom_text(data = NULL, x = 5,  y = nd_text_y, label = "ND", size = nd_text_size) + # Cd054 078-126
+  geom_text(data = NULL, x = 25, y = nd_text_y, label = "ND", size = nd_text_size) + # Cd093 027
+  geom_text(data = NULL, x = 59, y = nd_text_y, label = "ND", size = nd_text_size) + # VPI 003
+  geom_text(data = NULL, x = 86, y = nd_text_y, label = "ND", size = nd_text_size) + # Cd182 014-020
+  geom_text(data = NULL, x = 97, y = nd_text_y, label = "ND", size = nd_text_size) + # Cd072 014-020
+  annotate("rect",  # 078
+           xmin = 1.5,
+           xmax = 5.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "darkorchid") + 
+  annotate("rect",  # 017
+           xmin = 5.5,
+           xmax = 6.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "blue") +
+  annotate("rect", # 027 
+           xmin = 14.5,
+           xmax = 40.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "deepskyblue1") +
+  annotate("rect", # 013
+           xmin = 40.5,
+           xmax = 41.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "darkgreen") +
+  annotate("rect", # 053
+           xmin = 41.5,
+           xmax = 45.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "gold1") +
+  annotate("rect", # 003
+           xmin = 58.5,
+           xmax = 59.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "orange") +
+  annotate("rect", # 001
+           xmin = 61.5,
+           xmax = 65.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "red") +
+  annotate("rect", # 014 1
+           xmin = 82.5,
+           xmax = 83.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "brown") + 
+  annotate("rect", # 014 2
+           xmin = 84.5,
+           xmax = 102.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "brown") + 
+  annotate("rect", # 014 3
+           xmin = 103.5,
+           xmax = 107.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "brown")
+
 
 # Tree plot ----
 tree_plot_wo_leg <- ggtree(tree) %<+% ribotype + 
@@ -192,14 +310,90 @@ ribo_legend <- ggpubr::get_legend(tree_plot_w_leg)
 
 # Toxin Bar Plot ----
 bar_plot_p1 <- 
-  ggplot(phenotype, aes(ID, toxin)) + 
+  ggplot(toxin, aes(ID, toxin)) + 
   geom_col() + 
-  ggtitle("Toxin activity") + 
+  ggtitle("Cytotoxicity") + 
   theme_classic() +
   theme(axis.title.x = element_blank(),
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(), 
-        axis.title.y = element_blank())
+        axis.text.y = element_text(angle = y_angle, size = y_num_size), 
+        axis.title.y = element_text(size = y_fontsize, angle = y_title_angle)) + 
+  ylab(lapply(strwrap("Equivalent Toxin B Activity ln(ng/ml)",
+                      width = y_width, 
+                      simplify = FALSE),
+              paste, collapse = "\n")) + 
+  annotate("rect",  # 078
+           xmin = 1.5,
+           xmax = 5.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "darkorchid") + 
+  annotate("rect",  # 017
+           xmin = 5.5,
+           xmax = 6.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "blue") +
+  annotate("rect", # 027 
+           xmin = 14.5,
+           xmax = 40.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "deepskyblue1") +
+  annotate("rect", # 013
+           xmin = 40.5,
+           xmax = 41.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "darkgreen") +
+  annotate("rect", # 053
+           xmin = 41.5,
+           xmax = 45.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "gold1") +
+  annotate("rect", # 003
+           xmin = 58.5,
+           xmax = 59.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "orange") +
+  annotate("rect", # 001
+           xmin = 61.5,
+           xmax = 65.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "red") +
+  annotate("rect", # 014 1
+           xmin = 82.5,
+           xmax = 83.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "brown") + 
+  annotate("rect", # 014 2
+           xmin = 84.5,
+           xmax = 102.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "brown") + 
+  annotate("rect", # 014 3
+           xmin = 103.5,
+           xmax = 107.5,
+           ymin = -Inf,
+           ymax = Inf,
+           alpha = .2,
+           fill = "brown")
+
 
 # Presence /absence matrix ----
 heatmap.colours <- c("white", "black")
@@ -245,7 +439,7 @@ heatmap_plot_p3 <- ggplot(sig_genotype_df_long, aes(y = locus, x = ID)) +
   geom_tile(aes(fill = factor(presence))) + 
   scale_fill_manual(values = c("white", "black")) + 
   scale_y_discrete(position = "right") + 
-  guides(fill = FALSE) + 
+  guides(fill = "none") + 
   theme_bw() + 
   theme(axis.line = element_blank(),
         axis.text.y.right = element_text(size = 5, color = "black"),
@@ -277,6 +471,6 @@ combined_plot_grob <- ggplotify::as.grob(combined_plot)
 htmp_plot + combined_plot_grob  + 
   plot_layout(guides = 'keep') + 
   plot_layout(ncol = 2, widths = c(1, 6))
-ggsave("../../figures/Fig5.png", width = 12, height = 6, units = "in")
-ggsave("../../figures/Fig5.pdf", width = 12, height = 6, units = "in")
+ggsave("../../figures/Fig3.png", width = 12, height = 6, units = "in")
+ggsave("../../figures/Fig3.pdf", width = 12, height = 6, units = "in")
 

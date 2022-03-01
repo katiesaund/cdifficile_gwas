@@ -92,7 +92,7 @@ sev_plot <-
     axis.title.y = element_text(size = y_fontsize, angle = y_title_angle)
   ) +
   theme(plot.tag = element_text(face = "bold")) + 
-  ylab("Severe infection")
+  ylab("Severe infection") + 
   geom_text(data = NULL, x = 5,  y = nd_text_y, label = "ND", size = nd_text_size) + # Cd054 078-126
   geom_text(data = NULL, x = 25, y = nd_text_y, label = "ND", size = nd_text_size) + # Cd093 027
   geom_text(data = NULL, x = 59, y = nd_text_y, label = "ND", size = nd_text_size) + # VPI 003
