@@ -86,7 +86,13 @@ write_tsv(tcdC_117,
           file = paste0(data_dir, "13_summaries/hogwash_summary_for_figure_4_tcdC_117.tsv"), 
           col_names = TRUE)
 
-toxin_df %>% 
+top8_toxin <- toxin_df %>% 
   filter(Epsilon > ep_thresh) %>% 
   filter(`-ln(FDR P-value)` > -log(pval_thresh)) %>% 
-  View()
+  select(Genotype, roary_prokka_ID, `-ln(FDR P-value)`, Epsilon, Rank) %>% 
+  mutate(P = exp(-`-ln(FDR P-value)`)
+  )
+
+write_tsv(top8_toxin, 
+          file = paste0(data_dir, "13_summaries/hogwash_summary_for_figure_4_toxin_table3_part1.tsv"), 
+          col_names = TRUE)
