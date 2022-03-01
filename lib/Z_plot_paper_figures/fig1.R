@@ -497,7 +497,7 @@ cfe_plot <-
         axis.ticks.x = element_blank(), 
         axis.text.y = element_text(angle = y_angle, size = y_num_size), 
         axis.title.y = element_text(size = y_fontsize, angle = y_title_angle)) + 
-  ylab(lapply(strwrap("Viability ln(%)",
+  ylab(lapply(strwrap("Spore viability ln(%)",
                       width = y_width, 
                       simplify = FALSE),
               paste, collapse = "\n")) + 
@@ -598,7 +598,7 @@ sporulation_plot <-
         axis.ticks.x = element_blank(), 
         axis.text.y = element_text(angle = y_angle, size = y_num_size), 
         axis.title.y = element_text(size = y_fontsize, angle = y_title_angle)) + 
-  ylab(lapply(strwrap("ln(count)",
+  ylab(lapply(strwrap("Spore count ln(CFU/ml)",
                       width = y_width, 
                       simplify = FALSE),
               paste, collapse = "\n")) + 
