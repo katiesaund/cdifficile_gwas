@@ -8,6 +8,13 @@ library(aplot)
 library(ggpubr)
 library(ggplotify)
 
+# 
+y_width <- 15
+y_fontsize <- 9
+y_num_size <- 6
+y_angle <- 0 
+y_title_angle <- 0
+
 # Tree
 tree <- read.tree("../../data/3_trees/log_toxin.tree")
 
@@ -82,9 +89,10 @@ sev_plot <-
     axis.ticks.x = element_blank(),
     axis.ticks.y = element_blank(),
     axis.text.y = element_blank(),
-    axis.title.y = element_blank()
+    axis.title.y = element_text(size = y_fontsize, angle = y_title_angle)
   ) +
   theme(plot.tag = element_text(face = "bold")) + 
+  ylab("Severe infection")
   geom_text(data = NULL, x = 5,  y = nd_text_y, label = "ND", size = nd_text_size) + # Cd054 078-126
   geom_text(data = NULL, x = 25, y = nd_text_y, label = "ND", size = nd_text_size) + # Cd093 027
   geom_text(data = NULL, x = 59, y = nd_text_y, label = "ND", size = nd_text_size) + # VPI 003
@@ -177,12 +185,17 @@ toxin$toxin <- as.numeric(as.character(toxin$toxin))
 toxin_plot <- 
   ggplot(toxin, aes(ID, toxin)) + 
   geom_col() + 
-  ggtitle("Toxin activity") + 
+  ggtitle("Cytotoxicity") + 
   theme_classic() +
   theme(axis.title.x = element_blank(),
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(), 
-        axis.title.y = element_blank()) + 
+        axis.text.y = element_text(angle = y_angle, size = y_num_size), 
+        axis.title.y = element_text(size = y_fontsize, angle = y_title_angle)) + 
+  ylab(lapply(strwrap("Equivalent Toxin B Activity ln(ng/ml)",
+                      width = y_width, 
+                      simplify = FALSE),
+              paste, collapse = "\n")) + 
   annotate("rect",  # 078
            xmin = 1.5,
            xmax = 5.5,
@@ -270,12 +283,17 @@ germ_tc$germ_tc <- as.numeric(as.character(germ_tc$germ_tc))
 germ_tc_plot <- 
   ggplot(germ_tc, aes(ID, germ_tc)) + 
   geom_col() + 
-  ggtitle("Germ. in Tc") + 
+  ggtitle("Germination in TCA") + 
   theme_classic() +
   theme(axis.title.x = element_blank(),
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(), 
-        axis.title.y = element_blank()) + 
+        axis.text.y = element_text(angle = y_angle, size = y_num_size), 
+        axis.title.y = element_text(size = y_fontsize, angle = y_title_angle)) + 
+  ylab(lapply(strwrap("Germination ln(%)",
+                      width = y_width, 
+                      simplify = FALSE),
+              paste, collapse = "\n")) + 
   annotate("rect",  # 078
            xmin = 1.5,
            xmax = 5.5,
@@ -369,12 +387,17 @@ germ_tc_and_gly$germ_tc_and_gly <- as.numeric(as.character(germ_tc_and_gly$germ_
 germ_tc_and_gly_plot <- 
   ggplot(germ_tc_and_gly, aes(ID, germ_tc_and_gly)) + 
   geom_col() + 
-  ggtitle("Germ in Tc&Gly") + 
+  ggtitle("Germination in TCA&Gly") + 
   theme_classic() +
   theme(axis.title.x = element_blank(),
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(), 
-        axis.title.y = element_blank()) + 
+        axis.text.y = element_text(angle = y_angle, size = y_num_size), 
+        axis.title.y = element_text(size = y_fontsize, angle = y_title_angle)) + 
+  ylab(lapply(strwrap("Germination ln(%)",
+                      width = y_width, 
+                      simplify = FALSE),
+              paste, collapse = "\n")) + 
   geom_text(data = NULL, x = 5,  y = nd_text_y, label = "ND", size = nd_text_size) + # Cd054 078-126
   geom_text(data = NULL, x = 25, y = nd_text_y, label = "ND", size = nd_text_size) + # Cd093 027
   geom_text(data = NULL, x = 59, y = nd_text_y, label = "ND", size = nd_text_size) + # VPI 003
@@ -472,7 +495,12 @@ cfe_plot <-
   theme(axis.title.x = element_blank(),
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(), 
-        axis.title.y = element_blank()) + 
+        axis.text.y = element_text(angle = y_angle, size = y_num_size), 
+        axis.title.y = element_text(size = y_fontsize, angle = y_title_angle)) + 
+  ylab(lapply(strwrap("Viability ln(%)",
+                      width = y_width, 
+                      simplify = FALSE),
+              paste, collapse = "\n")) + 
   geom_text(data = NULL, x = 59, y = nd_text_y, label = "ND", size = nd_text_size) + # VPI 003
   geom_text(data = NULL, x = 74, y = nd_text_y, label = "ND", size = nd_text_size) + # DA00315 unique
   geom_text(data = NULL, x = 1, y = nd_text_y, label = "ND", size = nd_text_size) + # DA00484 unique
@@ -563,12 +591,17 @@ sporulation$sporulation <- as.numeric(as.character(sporulation$sporulation))
 sporulation_plot <- 
   ggplot(sporulation, aes(ID, sporulation)) + 
   geom_col() + 
-  ggtitle("# spores") + 
+  ggtitle("Total spores") + 
   theme_classic() +
   theme(axis.title.x = element_blank(),
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(), 
-        axis.title.y = element_blank()) + 
+        axis.text.y = element_text(angle = y_angle, size = y_num_size), 
+        axis.title.y = element_text(size = y_fontsize, angle = y_title_angle)) + 
+  ylab(lapply(strwrap("ln(count)",
+                      width = y_width, 
+                      simplify = FALSE),
+              paste, collapse = "\n")) + 
   geom_text(data = NULL, x = 59, y = nd_text_y, label = "ND", size = nd_text_size) + # VPI 003
   geom_text(data = NULL, x = 55, y = nd_text_y, label = "ND", size = nd_text_size) + # Cd086 078-126
   geom_text(data = NULL, x = 4, y = nd_text_y, label = "ND", size = nd_text_size) + # Cd033 Other
@@ -659,12 +692,17 @@ growth$growth <- as.numeric(as.character(growth$growth))
 growth_plot <- 
   ggplot(growth, aes(ID, growth)) + 
   geom_col() + 
-  ggtitle("Growth rate") + 
+  ggtitle("Maximum growth rate") + 
   theme_classic() +
   theme(axis.title.x = element_blank(),
         axis.text.x = element_blank(),
         axis.ticks.x = element_blank(), 
-        axis.title.y = element_blank()) + 
+        axis.text.y = element_text(angle = y_angle, size = y_num_size), 
+        axis.title.y = element_text(size = y_fontsize, angle = y_title_angle)) + 
+  ylab(lapply(strwrap("Max growth rate ln(OD/hour)",
+                      width = y_width, 
+                      simplify = FALSE),
+              paste, collapse = "\n")) + 
   annotate("rect",  # 078
            xmin = 1.5,
            xmax = 5.5,
