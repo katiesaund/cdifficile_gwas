@@ -1,0 +1,3 @@
+This directory is for using the eggnog mapper output to relabel the prokka/roary output with clostria annotations.
+There annotations will go into Table 3 (top cytotoxicity GWAS results) and Supplementary File 6: a key with the mapping.
+
