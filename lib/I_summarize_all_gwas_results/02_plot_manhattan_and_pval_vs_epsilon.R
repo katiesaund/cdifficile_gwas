@@ -1,7 +1,7 @@
 # Manhattan Plot and P-value vs. Epsilon (convergence) for each phenotype's 
 # hogwash results (continuous, phyc, and synchronous & grouped and individual)
 source("gwas_analysis_lib.R")
-
+library(tidyverse)
 # Make all plots ---------------------------------------------------------------
 hogwash_data_dir <- "../../data/5_hogwash/"
 fig_dir <- "../../figures/gwas_results/"

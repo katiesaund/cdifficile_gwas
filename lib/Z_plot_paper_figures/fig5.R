@@ -1,6 +1,11 @@
 library(aplot)
 library(patchwork)
 library(ggplotify)
+library(ggplot2)
+library(ape)
+library(ggtree)
+library(forcats)
+
 
 y_width <- 15
 y_fontsize <- 9
@@ -72,7 +77,9 @@ wg_tree_plot_w_leg <- ggtree(wg_tree) %<+% ribotype +
   geom_tippoint(aes(color = Ribotype), size = 0.5) + 
   scale_color_manual(values = ribotype_colors) + 
   coord_flip() + 
-  theme(legend.position = c(0.65, 0.0),
+  theme(legend.title = element_text(size = 10), # legend.position = c(0.65, 0.0),   
+    legend.position = c(0.40, 0.0), 
+        legend.text = element_text(size = 8), 
         legend.direction = "horizontal") + 
   ggtitle("WG")
 
@@ -101,9 +108,9 @@ gene_tree_plot_wo_leg <- ggtree(gene_tree) %<+% ribotype +
   theme(legend.position = "none") + 
   ggtitle(expression(italic("tcdB")))
 
-gene_tree_w_tox_plot <- 
-  toxin_plot %>% 
-  insert_bottom(gene_tree, height = 4)
+# gene_tree_w_tox_plot <- 
+#   toxin_plot_C %>% 
+#   insert_bottom(gene_tree, height = 4)
 
 gene_tree_w_tox_plot <- 
   toxin_plot_C %>% 
@@ -123,7 +130,7 @@ new_pyseer_plot + as.ggplot(wg_tree_w_tox_plot) +
   as.ggplot(gene_tree_w_tox_plot) + plot_layout(design = layout) + 
   plot_layout(guides = 'keep')
 
-ggsave("../../figures/Fig5.png", width = 12, height = 5, units = "in")
-ggsave("../../figures/Fig5.pdf", width = 12, height = 5, units = "in")
+ggsave("../../figures/Fig5.png", width = 14, height = 5, units = "in")
+ggsave("../../figures/Fig5.pdf", width = 14, height = 5, units = "in")
 
 
